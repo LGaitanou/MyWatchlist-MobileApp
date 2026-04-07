@@ -8,4 +8,8 @@ export interface FinancialInstrument {
     price: number;
     change: number;    // Percentage change
     type: InstrumentType; // Categorization
+
+    // Added for the 'detailed' update
+    logo?: string;     // URL for the logo
+    history: number[]; // Array of historical prices for the chart
 }

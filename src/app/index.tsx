@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { StyleSheet, Text, FlatList, SafeAreaView, View } from 'react-native';
-import { usePriceSimulation } from '../hooks/priceSimulation';
 import { AssetListItem } from '../components/instrumentListItem';
 import { SortSelector, SortOption } from '../components/sortSelector';
 import { useMarket } from '../context/marketContext';
+import { useRouter } from 'expo-router';
 
 export default function WatchlistScreen() {
-  const { instruments } = usePriceSimulation();
-  const { watchlistIds, toggleFavorite, isFavorite } = useMarket();
+  const { instruments, watchlistIds, toggleFavorite, isFavorite } = useMarket();
   const [sortBy, setSortBy] = useState<SortOption>('name');
+  const router = useRouter();
 
   const filteredAndSorted = useMemo(() => {
     // Only show instruments the user has added to their watchlist
@@ -42,6 +42,7 @@ export default function WatchlistScreen() {
                 item={item} 
                 isActive={isFavorite(item.id)}
                 onToggle={() => toggleFavorite(item.id)}
+                onPress={(id) => router.push({ pathname: '/details', params: { id } })}
                 iconType="heart"
               />
             )}

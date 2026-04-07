@@ -15,7 +15,7 @@ export const NavigationMenu = () => {
           {/* Favorites Screen */}
           <Link href="/favorites" asChild>
             <TouchableOpacity style={styles.menuItem} onPress={() => setIsOpen(false)}>
-              <Ionicons name="heart" size={24} color="#F44336" />
+              <Ionicons name="star" size={24} color="#F44336" />
               <Text style={styles.menuText}>Favorites</Text>
             </TouchableOpacity>
           </Link>

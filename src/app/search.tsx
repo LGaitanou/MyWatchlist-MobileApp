@@ -3,10 +3,12 @@ import { StyleSheet, Text, FlatList, SafeAreaView, TextInput, View, Alert } from
 import { INITIAL_INSTRUMENTS } from '../constants/mockData';
 import { AssetListItem } from '../components/instrumentListItem';
 import { useMarket } from '../context/marketContext';
+import { useRouter } from 'expo-router';
 
 export default function SearchScreen() {
   const [search, setSearch] = useState('');
   const { toggleWatchlist, isInWatchlist } = useMarket();
+  const router = useRouter();
 
   const handleToggle = (id: string, name: string) => {
     const isAdding = !isInWatchlist(id);
@@ -44,6 +46,7 @@ export default function SearchScreen() {
             item={item}
             isActive={isInWatchlist(item.id)}
             onToggle={() => handleToggle(item.id, item.name)}
+            onPress={(id) => router.push({ pathname: '/details', params: { id } })}
             iconType="plus"
           />
         )}

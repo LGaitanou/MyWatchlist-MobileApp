@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, FlatList, SafeAreaView, View } from 'react-native';
-import { usePriceSimulation } from '../hooks/priceSimulation';
 import { AssetListItem } from '../components/instrumentListItem';
 import { useMarket } from '../context/marketContext';
+import { useRouter } from 'expo-router';
 
 export default function FavoritesScreen() {
-  const { instruments } = usePriceSimulation();
-  const { favoriteIds, toggleFavorite, isFavorite } = useMarket();
+  const { instruments, favoriteIds, toggleFavorite, isFavorite } = useMarket();
+  const router = useRouter();
 
   // Show only instruments the user has favorited from the Watchlist
   const favorites = instruments.filter(item => favoriteIds.includes(item.id));
@@ -29,7 +29,8 @@ export default function FavoritesScreen() {
               item={item}
               isActive={isFavorite(item.id)}
               onToggle={() => toggleFavorite(item.id)}
-              iconType="heart"
+              onPress={(id) => router.push({ pathname: '/details', params: { id } })}
+              iconType="star"
             />
           )}
         />

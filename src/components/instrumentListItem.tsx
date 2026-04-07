@@ -3,12 +3,13 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FinancialInstrument } from '../types/financialInstrument';
 import { Ionicons } from '@expo/vector-icons';
 
-type IconType = 'plus' | 'heart';
+type IconType = 'plus' | 'star' | 'heart';
 
 interface Props {
   item: FinancialInstrument;
-  isActive?: boolean; // is in watchlist (for plus) or is favorite (for heart)
+  isActive?: boolean; // is in watchlist (for plus) or is favorite (for star/heart)
   onToggle?: (id: string) => void;
+  onPress?: (id: string) => void;
   showToggle?: boolean;
   iconType?: IconType;
 }
@@ -17,6 +18,7 @@ export const AssetListItem = ({
   item,
   isActive,
   onToggle,
+  onPress,
   showToggle = true,
   iconType = 'heart'
 }: Props) => {
@@ -26,12 +28,18 @@ export const AssetListItem = ({
     if (iconType === 'plus') {
       return isActive ? "checkmark-circle" : "add-circle-outline";
     }
+    if (iconType === 'star') {
+      return isActive ? "star" : "star-outline";
+    }
     return isActive ? "heart" : "heart-outline";
   };
 
   const getIconColor = () => {
     if (iconType === 'plus') {
       return isActive ? "#4CAF50" : "#BBB";
+    }
+    if (iconType === 'star') {
+      return isActive ? "#FFD700" : "#BBB";
     }
     return isActive ? "#F44336" : "#BBB";
   };
@@ -51,18 +59,26 @@ export const AssetListItem = ({
             />
           </TouchableOpacity>
         )}
-        <View>
+        <TouchableOpacity
+          style={styles.infoContainer}
+          onPress={() => onPress?.(item.id)}
+          disabled={!onPress}
+        >
           <Text style={styles.symbol}>{item.symbol}</Text>
           <Text style={styles.name}>{item.name}</Text>
-        </View>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.priceContainer}>
+      <TouchableOpacity
+        style={styles.priceContainer}
+        onPress={() => onPress?.(item.id)}
+        disabled={!onPress}
+      >
         <Text style={styles.price}>${item.price.toFixed(2)}</Text>
         <Text style={[styles.change, { color: isPositive ? '#4CAF50' : '#F44336' }]}>
           {isPositive ? '+' : ''}{item.change.toFixed(2)}%
         </Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -79,6 +95,10 @@ const styles = StyleSheet.create({
   leftContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+  },
+  infoContainer: {
+    flex: 1,
   },
   actionButton: {
     paddingRight: 15,

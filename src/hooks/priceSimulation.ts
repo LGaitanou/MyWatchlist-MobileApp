@@ -2,30 +2,45 @@ import { useState, useEffect } from 'react';
 import { FinancialInstrument } from '../types/financialInstrument';
 import { INITIAL_INSTRUMENTS } from '../constants/mockData';
 
+// Helper to generate initial random history
+const generateInitialHistory = (basePrice: number): number[] => {
+  const history = [];
+  let current = basePrice;
+  for (let i = 0; i < 20; i++) {
+    current = current * (1 + (Math.random() * 0.04 - 0.02));
+    history.push(current);
+  }
+  return history;
+};
+
+const INITIAL_WITH_HISTORY = INITIAL_INSTRUMENTS.map(item => ({
+  ...item,
+  history: generateInitialHistory(item.price)
+}));
+
 export const usePriceSimulation = () => {
-  // We initialize our state with the 15 instruments you just created
-  const [instruments, setInstruments] = useState<FinancialInstrument[]>(INITIAL_INSTRUMENTS);
+  const [instruments, setInstruments] = useState<FinancialInstrument[]>(INITIAL_WITH_HISTORY);
 
   useEffect(() => {
-    // Set up an interval to update prices every 5 seconds (5000ms)
     const interval = setInterval(() => {
       setInstruments((currentInstruments) =>
         currentInstruments.map((item) => {
-          // Calculate a random price fluctuation between -0.5% and +0.5%
           const fluctuation = (Math.random() * 0.01 - 0.005);
           const newPrice = item.price * (1 + fluctuation);
 
-          // Update the price and jitter the change percentage slightly
+          // Update history: remove oldest, add newest
+          const newHistory = [...item.history.slice(1), newPrice];
+
           return {
             ...item,
             price: newPrice,
             change: item.change + (Math.random() * 0.1 - 0.05),
+            history: newHistory
           };
         })
       );
     }, 5000);
 
-    // This "cleanup function" stops the timer if the user leaves the screen
     return () => clearInterval(interval);
   }, []);
 
