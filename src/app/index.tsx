@@ -4,14 +4,14 @@ import { AssetListItem } from '../components/instrumentListItem';
 import { SortSelector, SortOption } from '../components/sortSelector';
 import { useMarket } from '../context/marketContext';
 import { useRouter } from 'expo-router';
+import { ThemeToggle } from '../components/themeToggle';
 
 export default function WatchlistScreen() {
-  const { instruments, watchlistIds, toggleFavorite, isFavorite } = useMarket();
+  const { instruments, watchlistIds, toggleFavorite, isFavorite, colors } = useMarket();
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const router = useRouter();
 
   const filteredAndSorted = useMemo(() => {
-    // Only show instruments the user has added to their watchlist
     const userItems = instruments.filter(item => watchlistIds.includes(item.id));
     
     return [...userItems].sort((a, b) => {
@@ -22,9 +22,27 @@ export default function WatchlistScreen() {
     });
   }, [instruments, watchlistIds, sortBy]);
 
+  const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background, paddingHorizontal: 16 },
+    headerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: 40,
+      marginBottom: 20,
+    },
+    header: { fontSize: 28, fontWeight: 'bold', color: colors.text },
+    emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    emptyText: { fontSize: 18, color: colors.text, fontWeight: '600' },
+    emptySubText: { fontSize: 14, color: colors.subText, marginTop: 8 },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>My Watchlist</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>My Watchlist</Text>
+        <ThemeToggle />
+      </View>
 
       {watchlistIds.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -52,11 +70,3 @@ export default function WatchlistScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', paddingHorizontal: 16 },
-  header: { fontSize: 28, fontWeight: 'bold', marginVertical: 20, marginTop: 40 },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  emptyText: { fontSize: 18, color: '#333', fontWeight: '600' },
-  emptySubText: { fontSize: 14, color: '#666', marginTop: 8 },
-});

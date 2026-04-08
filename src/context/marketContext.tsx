@@ -2,13 +2,17 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { FinancialInstrument } from '../types/financialInstrument';
 import { INITIAL_INSTRUMENTS } from '../constants/mockData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ThemeType, Colors } from '../constants/theme';
 
 interface MarketContextType {
   instruments: FinancialInstrument[];
   watchlistIds: string[];
   favoriteIds: string[];
+  theme: ThemeType;
+  colors: typeof Colors.light;
   toggleWatchlist: (id: string) => void;
   toggleFavorite: (id: string) => void;
+  toggleTheme: () => void;
   isInWatchlist: (id: string) => boolean;
   isFavorite: (id: string) => boolean;
 }
@@ -17,8 +21,8 @@ const MarketContext = createContext<MarketContextType | undefined>(undefined);
 
 const WATCHLIST_STORAGE_KEY = '@mywatchlist_watchlist';
 const FAVORITES_STORAGE_KEY = '@mywatchlist_favorites';
+const THEME_STORAGE_KEY = '@mywatchlist_theme';
 
-// Helper to generate initial random history
 const generateInitialHistory = (basePrice: number): number[] => {
   const history = [];
   let current = basePrice;
@@ -38,17 +42,19 @@ export const MarketProvider = ({ children }: { children: ReactNode }) => {
   const [instruments, setInstruments] = useState<FinancialInstrument[]>(INITIAL_WITH_HISTORY);
   const [watchlistIds, setWatchlistIds] = useState<string[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const [theme, setTheme] = useState<ThemeType>('light');
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load data from AsyncStorage on mount
   useEffect(() => {
     const loadPersistedData = async () => {
       try {
         const storedWatchlist = await AsyncStorage.getItem(WATCHLIST_STORAGE_KEY);
         const storedFavorites = await AsyncStorage.getItem(FAVORITES_STORAGE_KEY);
+        const storedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
 
         if (storedWatchlist) setWatchlistIds(JSON.parse(storedWatchlist));
         if (storedFavorites) setFavoriteIds(JSON.parse(storedFavorites));
+        if (storedTheme) setTheme(storedTheme as ThemeType);
       } catch (e) {
         console.error('Failed to load persisted data', e);
       } finally {
@@ -59,21 +65,24 @@ export const MarketProvider = ({ children }: { children: ReactNode }) => {
     loadPersistedData();
   }, []);
 
-  // Save watchlist whenever it changes
   useEffect(() => {
     if (isLoaded) {
       AsyncStorage.setItem(WATCHLIST_STORAGE_KEY, JSON.stringify(watchlistIds));
     }
   }, [watchlistIds, isLoaded]);
 
-  // Save favorites whenever they change
   useEffect(() => {
     if (isLoaded) {
       AsyncStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favoriteIds));
     }
   }, [favoriteIds, isLoaded]);
 
-  // Global Price Simulation
+  useEffect(() => {
+    if (isLoaded) {
+      AsyncStorage.setItem(THEME_STORAGE_KEY, theme);
+    }
+  }, [theme, isLoaded]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setInstruments((currentInstruments) =>
@@ -107,8 +116,14 @@ export const MarketProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
   const isInWatchlist = (id: string) => watchlistIds.includes(id);
   const isFavorite = (id: string) => favoriteIds.includes(id);
+
+  const colors = Colors[theme];
 
   return (
     <MarketContext.Provider
@@ -116,8 +131,11 @@ export const MarketProvider = ({ children }: { children: ReactNode }) => {
         instruments,
         watchlistIds,
         favoriteIds,
+        theme,
+        colors,
         toggleWatchlist,
         toggleFavorite,
+        toggleTheme,
         isInWatchlist,
         isFavorite
       }}

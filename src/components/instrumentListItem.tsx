@@ -2,12 +2,13 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FinancialInstrument } from '../types/financialInstrument';
 import { Ionicons } from '@expo/vector-icons';
+import { useMarket } from '../context/marketContext';
 
 type IconType = 'plus' | 'star' | 'heart';
 
 interface Props {
   item: FinancialInstrument;
-  isActive?: boolean; // is in watchlist (for plus) or is favorite (for star/heart)
+  isActive?: boolean;
   onToggle?: (id: string) => void;
   onPress?: (id: string) => void;
   showToggle?: boolean;
@@ -22,6 +23,7 @@ export const AssetListItem = ({
   showToggle = true,
   iconType = 'heart'
 }: Props) => {
+  const { colors } = useMarket();
   const isPositive = item.change >= 0;
 
   const getIconName = () => {
@@ -36,13 +38,40 @@ export const AssetListItem = ({
 
   const getIconColor = () => {
     if (iconType === 'plus') {
-      return isActive ? "#4CAF50" : "#BBB";
+      return isActive ? colors.success : colors.subText;
     }
     if (iconType === 'star') {
-      return isActive ? "#FFD700" : "#BBB";
+      return isActive ? colors.favorite : colors.subText;
     }
-    return isActive ? "#F44336" : "#BBB";
+    return isActive ? colors.error : colors.subText;
   };
+
+  const styles = StyleSheet.create({
+    itemRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: 15,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    leftContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    infoContainer: {
+      flex: 1,
+    },
+    actionButton: {
+      paddingRight: 15,
+    },
+    symbol: { fontSize: 18, fontWeight: 'bold', color: colors.text },
+    name: { fontSize: 14, color: colors.subText },
+    priceContainer: { alignItems: 'flex-end' },
+    price: { fontSize: 16, fontWeight: '600', color: colors.text },
+    change: { fontSize: 14, fontWeight: '500' },
+  });
 
   return (
     <View style={styles.itemRow}>
@@ -75,37 +104,10 @@ export const AssetListItem = ({
         disabled={!onPress}
       >
         <Text style={styles.price}>${item.price.toFixed(2)}</Text>
-        <Text style={[styles.change, { color: isPositive ? '#4CAF50' : '#F44336' }]}>
+        <Text style={[styles.change, { color: isPositive ? colors.success : colors.error }]}>
           {isPositive ? '+' : ''}{item.change.toFixed(2)}%
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  itemRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  leftContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  infoContainer: {
-    flex: 1,
-  },
-  actionButton: {
-    paddingRight: 15,
-  },
-  symbol: { fontSize: 18, fontWeight: 'bold' },
-  name: { fontSize: 14, color: '#666' },
-  priceContainer: { alignItems: 'flex-end' },
-  price: { fontSize: 16, fontWeight: '600' },
-  change: { fontSize: 14, fontWeight: '500' },
-});
