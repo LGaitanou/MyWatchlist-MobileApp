@@ -4,7 +4,7 @@ import { FinancialInstrument } from '../types/financialInstrument';
 import { Ionicons } from '@expo/vector-icons';
 import { useMarket } from '../context/marketContext';
 
-type IconType = 'plus' | 'star' | 'heart';
+type IconType = 'plus' | 'star';
 
 interface Props {
   item: FinancialInstrument;
@@ -21,19 +21,19 @@ export const AssetListItem = ({
   onToggle,
   onPress,
   showToggle = true,
-  iconType = 'heart'
+  iconType = 'star'
 }: Props) => {
   const { colors } = useMarket();
   const isPositive = item.change >= 0;
 
-  const getIconName = () => {
+  const getIconName = (): any => {
     if (iconType === 'plus') {
       return isActive ? "checkmark-circle" : "add-circle-outline";
     }
     if (iconType === 'star') {
       return isActive ? "star" : "star-outline";
     }
-    return isActive ? "heart" : "heart-outline";
+    return "help-circle-outline";
   };
 
   const getIconColor = () => {
@@ -43,7 +43,7 @@ export const AssetListItem = ({
     if (iconType === 'star') {
       return isActive ? colors.favorite : colors.subText;
     }
-    return isActive ? colors.error : colors.subText;
+    return colors.subText;
   };
 
   const styles = StyleSheet.create({

@@ -37,7 +37,7 @@ export default function FavoritesScreen() {
       {favorites.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>No favorites yet.</Text>
-          <Text style={styles.emptySubText}>Add favorites by tapping the heart in your Watchlist.</Text>
+          <Text style={styles.emptySubText}>Add favorites by tapping the star in your Watchlist.</Text>
         </View>
       ) : (
         <FlatList

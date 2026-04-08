@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FinancialInstrument } from '../types/financialInstrument';
 import { Ionicons } from '@expo/vector-icons';
 import { useMarket } from '../context/marketContext';
+import { PriceChart } from './priceChart';
 
 interface Props {
   item: FinancialInstrument;
@@ -53,7 +54,7 @@ export const DetailedItem = ({
       padding: 5,
     },
     priceContainer: {
-      marginBottom: 30,
+      marginBottom: 10,
     },
     price: {
       fontSize: 42,
@@ -66,6 +67,7 @@ export const DetailedItem = ({
       marginTop: 4,
     },
     actions: {
+      marginTop: 20,
       gap: 12,
     },
     actionButton: {
@@ -124,6 +126,8 @@ export const DetailedItem = ({
         </Text>
       </View>
 
+      <PriceChart history={item.history} />
+
       <View style={styles.actions}>
         <TouchableOpacity
           style={[styles.actionButton, isFavorite ? styles.removeFavorite : styles.addFavorite]}
@@ -143,3 +147,4 @@ export const DetailedItem = ({
     </View>
   );
 };
+

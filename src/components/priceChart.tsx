@@ -1,46 +1,68 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Dimensions, StyleSheet } from 'react-native';
-import { LineChart } from "react-native-chart-kit";
+import { LineChart } from 'react-native-chart-kit';
+import { useMarket } from '../context/marketContext';
 
 interface Props {
-  data: number[];
-  isPositive: boolean;
+  history: number[];
 }
 
-export const PriceChart = ({ data, isPositive }: Props) => {
-  const [width, setWidth] = useState(Dimensions.get('window').width - 64);
+export const PriceChart = ({ history }: Props) => {
+  const { colors, theme } = useMarket();
+  const screenWidth = Dimensions.get('window').width;
 
-  if (!data || data.length === 0) return null;
+  // Calculate if the trend is positive or negative
+  const firstPrice = history[0];
+  const lastPrice = history[history.length - 1];
+  const isPositive = lastPrice >= firstPrice;
+  const chartColor = isPositive ? colors.success : colors.error;
+
+  const chartData = {
+    labels: [], // No labels for a clean look
+    datasets: [
+      {
+        data: history,
+        color: (opacity = 1) => chartColor, // Line color based on trend
+        strokeWidth: 3,
+      },
+    ],
+  };
+
+  const chartConfig = {
+    backgroundGradientFrom: colors.card,
+    backgroundGradientTo: colors.card,
+    decimalPlaces: 2,
+    color: (opacity = 1) => chartColor,
+    labelColor: (opacity = 1) => colors.subText,
+    style: {
+      borderRadius: 16,
+    },
+    propsForDots: {
+      r: "0", // Hide dots
+    },
+    propsForBackgroundLines: {
+      strokeDasharray: "", // solid lines
+      stroke: colors.border,
+      strokeWidth: 0.5,
+    }
+  };
 
   return (
-    <View
-      style={styles.container}
-      onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
-    >
+    <View style={styles.container}>
       <LineChart
-        data={{
-          labels: [], // No labels for a clean look
-          datasets: [{ data: data }]
-        }}
-        width={width}
-        height={180}
+        data={chartData}
+        width={screenWidth - 64} // Accounting for padding/margin
+        height={200}
+        chartConfig={chartConfig}
+        bezier // Smooth curve
+        style={styles.chart}
         withDots={false}
         withInnerLines={false}
         withOuterLines={false}
+        withVerticalLines={false}
+        withHorizontalLines={false}
         withVerticalLabels={false}
         withHorizontalLabels={false}
-        chartConfig={{
-          backgroundColor: "#fff",
-          backgroundGradientFrom: "#fff",
-          backgroundGradientTo: "#fff",
-          color: (opacity = 1) => isPositive ? `rgba(76, 175, 80, ${opacity})` : `rgba(244, 67, 54, ${opacity})`,
-          strokeWidth: 3,
-          propsForBackgroundLines: {
-            strokeDasharray: "" // solid background lines
-          }
-        }}
-        bezier // Makes the line curvy/smooth
-        style={styles.chart}
       />
     </View>
   );
@@ -50,12 +72,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 15,
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    marginVertical: 10,
   },
   chart: {
-    paddingRight: 0,
-    paddingLeft: 0,
-  }
+    borderRadius: 16,
+  },
 });

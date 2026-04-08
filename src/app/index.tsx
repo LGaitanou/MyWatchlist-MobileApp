@@ -61,7 +61,7 @@ export default function WatchlistScreen() {
                 isActive={isFavorite(item.id)}
                 onToggle={() => toggleFavorite(item.id)}
                 onPress={(id) => router.push({ pathname: '/details', params: { id } })}
-                iconType="heart"
+                iconType="star"
               />
             )}
           />
