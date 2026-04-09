@@ -9,7 +9,7 @@ AI was used for the development of this App.
 If you want to build the app, ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (LTS version)
 - [Android Studio](https://developer.android.com/studio) (for Android Emulator and SDK)
-- [Java Development Kit (JDK)]([https://adoptium.net/](https://www.oracle.com/java/technologies/downloads/)) (Version 17 recommended for modern Expo)
+- [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/) (Version 17 recommended for modern Expo)
 
 ## Installation
 
