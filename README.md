@@ -1,24 +1,17 @@
-# MyWatchlist - Financial Tracker App
+# MyWatchlist - Financial Instrument Tracker
 
-A React Native mobile application built with Expo for searching, tracking, and favoriting financial instruments. It features real-time price simulations, global state management, and a persistent dark mode.
+A React Native mobile application built with Expo, developed to help the developer practice, test, and learn React Native. This app fetures a very basic and rundemental way of searching and sorting financial instruments, like stocks, crypto and forex. All of the instruments present in the app have mock values and properties. It aslo has a favorites page, that can only be accessed by completing a mock Sign-Up. A light and dark mode toggle was also implemented. Finally, a detailed view of an instrument can be displayed by pressing it.
 
-## 🚀 Key Features
+AI was used for the development of this App.
 
-- **Real-time Simulation**: Prices and 20-point histories for all instruments update every 5 seconds.
-- **Global State**: Architecture powered by React Context API for consistent data across all screens.
-- **Local Persistence**: User watchlists, favorites, and theme settings are saved locally using `@react-native-async-storage/async-storage`.
-- **Dynamic Theming**: Full support for Light and Dark modes with a persistent toggle.
-- **Interactive Charts**: Visual price history using `react-native-chart-kit`.
-- **Navigation**: File-based routing using `expo-router`.
+## Prerequisites
 
-## 🛠️ Prerequisites
-
-Before you begin, ensure you have the following installed:
+If you want to build the app, ensure you have the following installed:
 - [Node.js](https://nodejs.org/) (LTS version)
 - [Android Studio](https://developer.android.com/studio) (for Android Emulator and SDK)
-- [Java Development Kit (JDK)](https://adoptium.net/) (Version 17 recommended for modern Expo)
+- [Java Development Kit (JDK)]([https://adoptium.net/](https://www.oracle.com/java/technologies/downloads/)) (Version 17 recommended for modern Expo)
 
-## 📦 Installation
+## Installation
 
 1. **Clone the repository**
    ```bash
@@ -31,12 +24,12 @@ Before you begin, ensure you have the following installed:
    npm install
    ```
 
-## 🏃 Running the App
+## Running the App
 
-Since this project uses native modules (like AsyncStorage and SVG), you must run it as a **Development Build**.
+This app uses native modules like SVG and AsyncStorage, so it must be run on a **Development Built**.
 
 ### For Android
-Ensure your emulator is running or a physical device is connected via USB:
+Ensure an android emulator is running or a physical device is connected via USB:
 ```bash
 npx expo run:android
 ```
@@ -45,18 +38,3 @@ npx expo run:android
 ```bash
 npx expo run:ios
 ```
-
-## 🏗️ Project Structure
-
-- `src/app/`: Screen components and routing logic (Expo Router).
-- `src/context/`: Global state management (`MarketContext`).
-- `src/components/`: Reusable UI components (Charts, List Items, Toggles).
-- `src/constants/`: Mock data and theme color palettes.
-- `src/types/`: TypeScript interfaces and types.
-
-## 🧪 Technical Highlights
-
-- **Custom Hooks**: Implementation of `useMarket` for clean access to global state.
-- **Optimized Rendering**: Usage of `useMemo` for efficient list sorting and filtering.
-- **Defensive Programming**: Safe-guarding against undefined data and handling empty states.
-- **Vector Icons**: Consistent iconography using `@expo/vector-icons` (Ionicons).
