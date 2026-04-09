@@ -10,9 +10,11 @@ interface MarketContextType {
   favoriteIds: string[];
   theme: ThemeType;
   colors: typeof Colors.light;
+  isLoggedIn: boolean;
   toggleWatchlist: (id: string) => void;
   toggleFavorite: (id: string) => void;
   toggleTheme: () => void;
+  setIsLoggedIn: (value: boolean) => void;
   isInWatchlist: (id: string) => boolean;
   isFavorite: (id: string) => boolean;
 }
@@ -22,6 +24,7 @@ const MarketContext = createContext<MarketContextType | undefined>(undefined);
 const WATCHLIST_STORAGE_KEY = '@mywatchlist_watchlist';
 const FAVORITES_STORAGE_KEY = '@mywatchlist_favorites';
 const THEME_STORAGE_KEY = '@mywatchlist_theme';
+const AUTH_STORAGE_KEY = '@mywatchlist_isLoggedIn';
 
 const generateInitialHistory = (basePrice: number): number[] => {
   const history = [];
@@ -43,6 +46,7 @@ export const MarketProvider = ({ children }: { children: ReactNode }) => {
   const [watchlistIds, setWatchlistIds] = useState<string[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [theme, setTheme] = useState<ThemeType>('light');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -51,10 +55,12 @@ export const MarketProvider = ({ children }: { children: ReactNode }) => {
         const storedWatchlist = await AsyncStorage.getItem(WATCHLIST_STORAGE_KEY);
         const storedFavorites = await AsyncStorage.getItem(FAVORITES_STORAGE_KEY);
         const storedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+        const storedAuth = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
 
         if (storedWatchlist) setWatchlistIds(JSON.parse(storedWatchlist));
         if (storedFavorites) setFavoriteIds(JSON.parse(storedFavorites));
         if (storedTheme) setTheme(storedTheme as ThemeType);
+        if (storedAuth) setIsLoggedIn(JSON.parse(storedAuth));
       } catch (e) {
         console.error('Failed to load persisted data', e);
       } finally {
@@ -82,6 +88,12 @@ export const MarketProvider = ({ children }: { children: ReactNode }) => {
       AsyncStorage.setItem(THEME_STORAGE_KEY, theme);
     }
   }, [theme, isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded) {
+      AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(isLoggedIn));
+    }
+  }, [isLoggedIn, isLoaded]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -133,9 +145,11 @@ export const MarketProvider = ({ children }: { children: ReactNode }) => {
         favoriteIds,
         theme,
         colors,
+        isLoggedIn,
         toggleWatchlist,
         toggleFavorite,
         toggleTheme,
+        setIsLoggedIn,
         isInWatchlist,
         isFavorite
       }}
