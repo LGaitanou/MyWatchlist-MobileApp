@@ -1,56 +1,62 @@
-# Welcome to your Expo app 👋
+# MyWatchlist - Financial Tracker App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application built with Expo for searching, tracking, and favoriting financial instruments. It features real-time price simulations, global state management, and a persistent dark mode.
 
-## Get started
+## 🚀 Key Features
 
-1. Install dependencies
+- **Real-time Simulation**: Prices and 20-point histories for all instruments update every 5 seconds.
+- **Global State**: Architecture powered by React Context API for consistent data across all screens.
+- **Local Persistence**: User watchlists, favorites, and theme settings are saved locally using `@react-native-async-storage/async-storage`.
+- **Dynamic Theming**: Full support for Light and Dark modes with a persistent toggle.
+- **Interactive Charts**: Visual price history using `react-native-chart-kit`.
+- **Navigation**: File-based routing using `expo-router`.
 
+## 🛠️ Prerequisites
+
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (LTS version)
+- [Android Studio](https://developer.android.com/studio) (for Android Emulator and SDK)
+- [Java Development Kit (JDK)](https://adoptium.net/) (Version 17 recommended for modern Expo)
+
+## 📦 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/LGaitanou/MyWatchlist-MobileApp.git
+   cd MyWatchlist-MobileApp
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
+## 🏃 Running the App
 
-   ```bash
-   npx expo start
-   ```
+Since this project uses native modules (like AsyncStorage and SVG), you must run it as a **Development Build**.
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+### For Android
+Ensure your emulator is running or a physical device is connected via USB:
 ```bash
-npm run reset-project
+npx expo run:android
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### For iOS (macOS only)
+```bash
+npx expo run:ios
+```
 
-### Other setup steps
+## 🏗️ Project Structure
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+- `src/app/`: Screen components and routing logic (Expo Router).
+- `src/context/`: Global state management (`MarketContext`).
+- `src/components/`: Reusable UI components (Charts, List Items, Toggles).
+- `src/constants/`: Mock data and theme color palettes.
+- `src/types/`: TypeScript interfaces and types.
 
-## Learn more
+## 🧪 Technical Highlights
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Custom Hooks**: Implementation of `useMarket` for clean access to global state.
+- **Optimized Rendering**: Usage of `useMemo` for efficient list sorting and filtering.
+- **Defensive Programming**: Safe-guarding against undefined data and handling empty states.
+- **Vector Icons**: Consistent iconography using `@expo/vector-icons` (Ionicons).
